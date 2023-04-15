@@ -1,0 +1,30 @@
+services:
+  app:
+    image: githubscraping/app
+    container_name: app
+    build: .
+    depends_on:
+      - db
+    
+  db:
+    image: mongo:4.4.6
+    container_name: db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: hbX1AoLSjhdnznc
+    volumes:
+      - ./db:/data/db:z
+
+  mongo-express:
+    image: mongo-express
+    container_name: express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: hbX1AoLSjhdnznc
+      ME_CONFIG_MONGODB_URL: mongodb://root:hbX1AoLSjhdnznc@db:27017/
+    depends_on:
+      - db
