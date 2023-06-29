@@ -2,4 +2,3 @@
 *.json
 *.log
 .DS_Store
-/db/*

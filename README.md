@@ -1,4 +1,4 @@
-# Hschmidt Stud Github Scraping
+# Github Scraping
 
 
 

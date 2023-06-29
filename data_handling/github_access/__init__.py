@@ -1,8 +1,11 @@
 import github_access.access as access
 
-def getRepoWithMostStars(amount, minStars):
-    return access.getMostStarredRepos(amount=amount, minStars=minStars)
-
+def getMostForkedProjects(amount, offset):
+    amount += offset
+    mock = []
+    for i in range(offset, amount):
+        mock.append(i)
+    return mock
 
 
 def getData(id): 

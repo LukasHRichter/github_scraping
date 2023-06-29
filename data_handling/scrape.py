@@ -5,35 +5,17 @@ import data_formatter as format
 import data_store as store
 import github_access as access
 
-def scrapeGithub(mode = 's', amount = 3000, minStars = 1000, offset = 0):
-    '''
-    scrape a given amount of repositories
-    @Params
-    --------
-    mode: str; accepts "s" for scraping, "i" for indexing, "is" for both
-    amount: int; number of repositories to scrape
-    minStars: int; minimum amount of stars
-    offset: int; skip the first <offset> repositories
-    '''
+def scrapeGithub(amount, offset):
+    ids = access.getMostForkedProjects(amount, offset)
+    #https://api.github.com/search/repositories?q=language:python&sort=stars&order=desc
+    #https://github.com/search?l=Python&q=stars%3A%3E1&s=stars&type=Repositories
+    ids = [12888993, 81598961, 32689863, 5483330, 145553672, 162998479, 154747577, 91573538, 57222302, 237791077]
 
-    log.info(f'script is in "{mode}"-mode')
-
-    if mode.find('i') != -1:
-        log.info(f'get {amount} repository ids with the most stars')
-        ids = access.getRepoWithMostStars(amount=amount, minStars=minStars)
-
-        log.info(f'storing {amount} repository ids with the most stars')
-        store.storeRepoIds(ids=ids, amount=amount, offset=offset)
-
-    if mode.find('s') != -1:
-        log.info(f'get {amount} repository ids with the most stars')
-        ids = store.getRepoIds(amount=amount, offset=offset)
-
-        log.info(f'get metadata for {amount} projects:')
-        for id in ids:
-            log.info(f'[{id}] - getData')
-            data = access.getData(id=id)
-            log.info(f'[{id}] - formatData')
-            data = format.formatData(data=data)
-            log.info(f'[{id}] - storeData')
-            store.storeRepoData(repo=id, data=data)
+    log.debug(f'Get metadata for {len(ids)} projects:')
+    for id in ids:
+        log.debug(f'[{id}] - getData')
+        data = access.getData(id=id)
+        log.debug(f'[{id}] - formatData')
+        data = format.formatData(data=data)
+        log.debug(f'[{id}] - storeData')
+        store.storeData(repo=id, data=data)
