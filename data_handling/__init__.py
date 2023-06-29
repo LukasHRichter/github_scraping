@@ -2,15 +2,14 @@ import sys
 sys.dont_write_bytecode = True
 import os
 import logging as log
-import api
 import scrape
 from threading import Thread
 
-ROOT_DIR = './data_handndling'
+ROOT_DIR = './data_handling'
 
-if not os.path.exists(f'./data_handling/logs'):
-    os.mkdir(f'./data_handling/logs')
-open(f'./data_handling/logs/combined.log','w').close()
+if not os.path.exists(f'{ROOT_DIR}/logs'):
+    os.mkdir(f'{ROOT_DIR}/logs')
+open(f'{ROOT_DIR}/logs/combined.log','w').close()
 
 def _startLogger(level):
     levels = {
@@ -19,16 +18,26 @@ def _startLogger(level):
         'warn': log.WARN,
         'error': log.ERROR,
     }
-    log.basicConfig(filename=f'./data_handling/logs/combined.log', filemode='w', format='[%(asctime)s - %(levelname)s]: %(message)s', level=levels.get(level))
+    #log.basicConfig(filename=f'{ROOT_DIR}/logs/combined.log', filemode='w', format='[%(asctime)s - %(levelname)s]: %(message)s', level=levels.get(level))
+    log.basicConfig(format='[%(asctime)s - %(levelname)s]: %(message)s', level=levels.get(level))
 
-_startLogger('debug')
+_startLogger('info')
+log.debug('Start logging')
 
 
-#example scrape usage
-amount = 1
-offset = 0
-t = Thread(target = scrape.scrapeGithub, args =(amount, offset))
+# amount of repos to be scraped in multiples of 1000
+# after every 3000 repos we need to wait 10 minutes
+amount = 30000
+# >1000 stars -> max repos 37000
+# >100 stars -> max repos 295000
+minStars = 1000
+# Modes:
+# 'i': index RepoIds
+# 's': scrape indexed Repos
+# 'is': do both
+mode = 's'
+# offset for scraping the next x repos
+offset = 7000
+
+t = Thread(target = scrape.scrapeGithub, args =(mode, amount, minStars, offset))
 t.start()
-
-#example API usage
-#api.getMetadata(100, 'abc', 'def')

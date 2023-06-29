@@ -2,6 +2,14 @@ import logging as log
 import data_formatter
 
 def formatData(data):
+    '''
+    format Data for DB
+    - delete unnecessary data
+    - delete empty data
+    @Params
+    --------
+    data: dict; data, before removal
+    '''
     _dict = data.copy()
 
     # formatData for all elements (_dict is list)

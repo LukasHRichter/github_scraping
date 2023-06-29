@@ -2,3 +2,6 @@
 *.json
 *.log
 .DS_Store
+/db/*
+/o_db/*
+/old_db/*
